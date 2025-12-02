@@ -1,0 +1,109 @@
+import 'package:ayssoft/app/ui/screens/Home/index.dart';
+import 'package:ayssoft/app/ui/screens/Login/widgets/login-button.dart';
+import 'package:ayssoft/app/ui/screens/Login/widgets/login-form-fields.dart';
+import 'package:ayssoft/app/ui/screens/Login/widgets/login-header.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../data/service/auth.dart';
+import '../../../repository/authRepository.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final AuthRepository _authRepository = AuthRepository(service: AuthService());
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _rememberMe = false;
+  bool _isLoading = false;
+
+  void _handleRememberMeChange(bool? newValue) {
+    setState(() {
+      _rememberMe = newValue ?? false;
+    });
+  }
+
+  Future<void> _login() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lütfen kullanıcı adı ve şifre giriniz')),
+      );
+      return;
+    }
+    FocusScope.of(context).unfocus();
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final user = await _authRepository.login(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        rememberMe: _rememberMe,
+      );
+
+      if (!mounted) return;
+
+      if (user != null) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const MyHomePage(title: 'Dummy Json'),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Giriş Başarısız: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(80.w),
+          height: 1.sh,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const LoginHeader(),
+              LoginFormFields(
+                emailController: _emailController,
+                passwordController: _passwordController,
+                rememberMe: _rememberMe,
+                onRememberMeChanged: _handleRememberMeChange,
+              ),
+              LoginButton(onPressed: _login, isLoading: _isLoading),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
