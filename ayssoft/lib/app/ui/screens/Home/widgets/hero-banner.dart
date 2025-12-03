@@ -15,9 +15,8 @@ class HeroBanner extends StatelessWidget {
             SizedBox(
               height: 250,
               width: double.infinity,
-              // Düzeltilmiş Kod:
               child: Image.asset(
-                'lib/app/public/assets/dummyHome.png', // Düzeltildi
+                'lib/app/public/assets/dummyHome.png',
                 fit: BoxFit.cover,
               ),
             ),

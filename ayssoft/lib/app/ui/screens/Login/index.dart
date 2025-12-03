@@ -1,4 +1,4 @@
-import 'package:ayssoft/app/ui/screens/Home/index.dart';
+import 'package:ayssoft/app/common/root-shell.dart';
 import 'package:ayssoft/app/ui/screens/Login/widgets/login-button.dart';
 import 'package:ayssoft/app/ui/screens/Login/widgets/login-form-fields.dart';
 import 'package:ayssoft/app/ui/screens/Login/widgets/login-header.dart';
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => const MyHomePage(title: 'Dummy Json'),
+            builder: (context) => const RootShell(),
           ),
           (Route<dynamic> route) => false,
         );

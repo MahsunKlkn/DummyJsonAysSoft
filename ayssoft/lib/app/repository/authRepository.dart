@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import '../data/model/user.dart';
 import '../data/service/auth.dart';
 
-// IAuthRepository arayüzünün de bu yeni imzayı içermesi gerektiğini unutmayın.
 class AuthRepository implements IAuthRepository {
   final AuthService _service;
   final AuthCacheManager _cacheManager = AuthCacheManager.instance;
@@ -26,7 +25,6 @@ class AuthRepository implements IAuthRepository {
         );
         
         if (user.accessToken != null) {
-          // 🛑 SADECE rememberMe TRUE İSE HIVE'A KAYDET 🛑
           if (rememberMe) {
             await _cacheManager.saveAuthData(
               user.accessToken!,
@@ -43,7 +41,6 @@ class AuthRepository implements IAuthRepository {
             print('✅ Repo: Giriş Başarılı, Kalıcı Kayıt YAPILMADI (Remember Me kapalı).');
           }
           
-          // Token ve kullanıcı nesnesi, LoginPage tarafından yönlendirme için döndürülür.
           return user;
         }
       }
