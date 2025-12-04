@@ -1,9 +1,11 @@
 import 'package:ayssoft/app/core/constant/color.dart';
 import 'package:ayssoft/app/data/model/HiveModel/cartProduct.dart';
+import 'package:ayssoft/app/manager/provider/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 
-class CartItemCompact extends StatelessWidget {
+class CartItemCompact extends ConsumerWidget { 
   final CartProduct product;
   final Color primaryColor;
   final VoidCallback onRemove; 
@@ -16,107 +18,122 @@ class CartItemCompact extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    // İndirim olup olmadığını kontrol eder
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartNotifier = ref.read(cartNotifierProvider.notifier);
+    final currentQuantity = product.quantity; 
+    
+
     final bool hasDiscount = product.total != product.discountedTotal;
-    // Nihai fiyatı (indirimli fiyatı) belirler
     final double finalPrice = product.discountedTotal;
+    final primary = AppColors.primary;
+
+    void incrementQuantity() {
+      cartNotifier.updateProductQuantity(product.id, currentQuantity + 1);
+    }
+
+    void decrementQuantity() {
+      cartNotifier.updateProductQuantity(product.id, currentQuantity - 1);
+    }
 
     return Container(
       color: Colors.white,
       child: Column(
         children: [
           Padding(
-            // Dikey dolgu artırıldı (vertical: 20.h'dan 25.h'ye)
             padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 25.h), 
             child: Column(
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Ürün Resmi/İkonu
                     Container(
-                      // Boyut 160.w'dan 180.w'ye çıkarıldı
                       width: 180.w, 
                       height: 180.w, 
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10.w),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.w),
-                        // Eğer ürünün görsel URL'si yoksa fallback olarak Icon kullanılır.
                         child: product.thumbnail.isNotEmpty
                             ? Image.network(
                                 product.thumbnail, 
                                 fit: BoxFit.cover,
-                                // Yüklenirken veya hata oluştuğunda gösterilecek widget'lar
                                 loadingBuilder: (context, child, loadingProgress) {
                                   if (loadingProgress == null) return child;
-                                  return Center(child: CircularProgressIndicator(color: AppColors.primary));
+                                  return child; 
                                 },
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.broken_image, color: Colors.grey, size: 90.sp); // İkon boyutu büyütüldü
+                                  return Icon(Icons.broken_image, color: Colors.grey, size: 90.sp);
                                 },
                               )
-                            : Icon(Icons.shopping_bag, color: AppColors.primary, size: 90.sp), // İkon boyutu büyütüldü
+                            : Icon(Icons.shopping_bag, color: primary, size: 90.sp),
                       ),
                     ),
                     SizedBox(width: 25.w),
-
-                    // Ürün Bilgileri
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             product.title,
-                            // Yazı tipi boyutu 44.sp'den 48.sp'ye çıkarıldı
                             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 48.sp), 
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             "Stok Kodu: ${product.id}",
-                            // Yazı tipi boyutu 38.sp'den 40.sp'ye çıkarıldı
                             style: TextStyle(fontSize: 40.sp, color: Colors.grey[600]), 
                           ),
-                          Text(
-                            "Adet: ${product.quantity}",
-                            // Yazı tipi boyutu 38.sp'den 40.sp'ye çıkarıldı
-                            style: TextStyle(fontSize: 40.sp, color: Colors.grey[600]), 
+                          SizedBox(height: 10.h),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Azaltma Butonu
+                              _QuantityButton(
+                                icon: Icons.remove,
+                                onPressed: decrementQuantity,
+                                isEnabled: currentQuantity > 0, 
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                child: Text(
+                                  "${currentQuantity}",
+                                  style: TextStyle(fontSize: 44.sp, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              // Artırma Butonu
+                              _QuantityButton(
+                                icon: Icons.add,
+                                onPressed: incrementQuantity,
+                                isEnabled: true,
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-
-                    // Fiyat ve Silme Butonu
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        // Orijinal Fiyat (İndirim varsa üstü çizili gösterilir)
                         if (hasDiscount) 
                           Text(
                             "${product.total.toStringAsFixed(2)} TL",
                             style: TextStyle(
-                              // Yazı tipi boyutu 36.sp'den 38.sp'ye çıkarıldı
                               fontSize: 38.sp, 
                               color: Colors.grey,
                               decoration: TextDecoration.lineThrough,
                               decorationColor: Colors.grey,
                             ),
                           ),
-                        // İndirimli/Nihai Fiyat (Her zaman gösterilir ve vurgulanır)
                         Text(
                           "${finalPrice.toStringAsFixed(2)} TL",
-                          // Yazı tipi boyutu 46.sp'den 50.sp'ye çıkarıldı
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50.sp, color: AppColors.primary), 
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50.sp, color: primary), 
                         ),
                         SizedBox(height: 10.h),
-                        // Silme Butonu
                         IconButton(
                           onPressed: onRemove,
-                          icon: Icon(Icons.delete_outline, color: Colors.red, size: 60.sp), // İkon boyutu büyütüldü
+                          icon: Icon(Icons.delete_outline, color: Colors.red, size: 60.sp),
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                         ),
@@ -127,9 +144,44 @@ class CartItemCompact extends StatelessWidget {
               ],
             ),
           ),
-          // Ayırıcı Çizgi
           Divider(height: 1.h, thickness: 1.w, indent: 25.w, endIndent: 25.w, color: AppColors.grey50),
         ],
+      ),
+    );
+  }
+}
+
+// Miktar butonu için yardımcı widget
+class _QuantityButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+  final bool isEnabled;
+
+  const _QuantityButton({
+    required this.icon,
+    required this.onPressed,
+    this.isEnabled = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: isEnabled ? onPressed : null,
+      customBorder: const CircleBorder(),
+      // İYİLEŞTİRME 2: Butona basıldığında oluşan mavi sıçrama (splash) efektini iptal ediyoruz.
+      splashColor: Colors.transparent, 
+      highlightColor: Colors.transparent,
+      child: Container(
+        padding: EdgeInsets.all(5.w),
+        decoration: BoxDecoration(
+          color: isEnabled ? AppColors.primary.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          size: 40.sp,
+          color: isEnabled ? AppColors.primary : Colors.grey,
+        ),
       ),
     );
   }

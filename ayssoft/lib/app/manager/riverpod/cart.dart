@@ -13,8 +13,8 @@ class CartNotifier extends StateNotifier<CartState> {
   Future<void> _loadCart() async {
     state = state.copyWith(isLoading: true);
     try {
-      await _repository.init(); // Repository'i başlat
-      final cart = _repository.getCart(); // Repository'den sepeti al
+      await _repository.init();
+      final cart = _repository.getCart();
       state = state.copyWith(cart: cart, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
@@ -25,8 +25,8 @@ class CartNotifier extends StateNotifier<CartState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _repository.addProduct(product); // Repository ile ekle
-      final cart = _repository.getCart(); // Repository'den güncel sepeti al
+      await _repository.addProduct(product);
+      final cart = _repository.getCart();
       state = state.copyWith(cart: cart, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
@@ -34,14 +34,28 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<void> removeProduct(int productId) async {
-    state = state.copyWith(isLoading: true);
+  try {
+    await _repository.removeProduct(productId);
+    final cart = _repository.getCart();
+    state = state.copyWith(cart: cart); 
+  } catch (e) {
+    // Hata işleme
+  }
+}
+
+  Future<void> updateProductQuantity(int productId, int newQuantity) async {
+    if (newQuantity <= 0) {
+      await removeProduct(productId);
+      return;
+    }
 
     try {
-      await _repository.removeProduct(productId); // Repository ile sil
-      final cart = _repository.getCart(); // Repository'den güncel sepeti al
-      state = state.copyWith(cart: cart, isLoading: false);
+      await _repository.updateProductQuantity(productId, newQuantity);
+      final cart = _repository.getCart();
+      state = state.copyWith(cart: cart); 
+      
     } catch (e) {
-      state = state.copyWith(isLoading: false);
+      // Hata işleme ekleyebilirsiniz
     }
   }
 
@@ -49,7 +63,7 @@ class CartNotifier extends StateNotifier<CartState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _repository.clearCart(); // Repository ile temizle
+      await _repository.clearCart();
       state = state.copyWith(cart: null, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);

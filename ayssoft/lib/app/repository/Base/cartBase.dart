@@ -7,4 +7,5 @@ abstract class ICartBaseRepository {
   Future<void> addProduct(CartProduct product);
   Future<void> removeProduct(int productId);
   Future<void> clearCart();
+  Future<void> updateProductQuantity(int productId, int newQuantity);
 }

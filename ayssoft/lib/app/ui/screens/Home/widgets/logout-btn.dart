@@ -16,34 +16,29 @@ class LogoutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        right: 10.0.w, 
-        top: 3.0.h, 
-        bottom: 3.0.h,
-        left: 10.0.w,
-      ), 
+      padding: EdgeInsets.only(right: 32.w),
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           foregroundColor: const Color(0xFF003366),
           side: BorderSide(
-            color: Colors.grey[350]!,
-            width: 1.0.w, 
+            color: Theme.of(context).primaryColor,
+            width: 1.8.w, 
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0.w), 
+            borderRadius: BorderRadius.circular(16.w), 
           ),
           padding: EdgeInsets.symmetric(
-            horizontal: 10.w, 
-            vertical: 4.h,
+            horizontal: 36.w, 
+            vertical: 16.h,   
           ), 
           backgroundColor: Colors.transparent, 
         ),
         child: Text(
           text, 
           style: TextStyle(
-            fontWeight: FontWeight.bold, 
-            fontSize: 48.sp, 
+            fontWeight: FontWeight.w600,
+            fontSize: 36.sp,
           ),
         ),
       ),

@@ -16,12 +16,7 @@ class ProductCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 1. Favori Notifier'a erişim (Toggle işlemini yapmak için)
     final favoriteNotifier = ref.read(favoriteNotifierProvider.notifier);
-
-    // 2. Ürünün favori durumunu anlık olarak dinle
-    // Not: Bu, sadece ilgili widget'ın yeniden çizilmesini sağlar.
-    // 'select' kullanarak sadece favori listesinin kendisi değiştiğinde dinlemeyi optimize edelim.
     final isFavorite = ref.watch(
       favoriteNotifierProvider.select(
         (state) => state.favorites.any((fav) => fav.id == product.id),
@@ -153,7 +148,7 @@ class ProductCard extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '\$${product.price.toStringAsFixed(2)}',
+                              '${product.price.toStringAsFixed(2)} \TL',
                               style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.w900,

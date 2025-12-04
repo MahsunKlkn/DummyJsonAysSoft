@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 class HeroBanner extends StatelessWidget {
   const HeroBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(24.w),
         child: Stack(
           alignment: Alignment.centerLeft,
           children: [
             SizedBox(
-              height: 250,
+              height: 700.h,
               width: double.infinity,
               child: Image.asset(
                 'lib/app/public/assets/dummyHome.png',
@@ -21,7 +21,7 @@ class HeroBanner extends StatelessWidget {
               ),
             ),
             Container(
-              height: 250,
+              height: 700.h,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Colors.black.withOpacity(0.6), Colors.transparent],
@@ -31,31 +31,34 @@ class HeroBanner extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(36.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     "DummyJson",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 22,
+                      fontSize: 48.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Text(
+                  Text(
                     "Aradığın Her Şey Burada!",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                      color: Colors.white, 
+                      fontSize: 36.sp
+                    ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 30.h),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(16.w),
                       ),
                     ),
                     child: const Text("Ürünleri Keşfet"),

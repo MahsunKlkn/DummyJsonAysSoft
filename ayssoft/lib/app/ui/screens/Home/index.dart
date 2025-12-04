@@ -10,6 +10,7 @@ import 'package:ayssoft/app/ui/screens/Home/widgets/section-title.dart';
 import 'package:ayssoft/app/ui/screens/Login/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -61,6 +62,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       body: CustomScrollView( 
         controller: _scrollController,
         slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: SizedBox(height: 20.h),
+          ),
           const SliverToBoxAdapter(
             child: HeroBanner(),
           ),

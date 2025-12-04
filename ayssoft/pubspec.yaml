@@ -71,6 +71,7 @@ flutter:
     #- images/a_dot_ham.jpeg
     - lib/app/public/lottie/loading.json
     - lib/app/public/assets/dummyHome.png
+    - lib/app/public/assets/loginImage.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

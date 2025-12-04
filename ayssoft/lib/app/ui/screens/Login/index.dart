@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../data/service/auth.dart';
 import '../../../repository/authRepository.dart';
+import 'dart:ui' as ui;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -53,9 +54,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (user != null) {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const RootShell(),
-          ),
+          MaterialPageRoute(builder: (context) => const RootShell()),
           (Route<dynamic> route) => false,
         );
       }
@@ -85,24 +84,68 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(80.w),
-          height: 1.sh,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const LoginHeader(),
-              LoginFormFields(
-                emailController: _emailController,
-                passwordController: _passwordController,
-                rememberMe: _rememberMe,
-                onRememberMeChanged: _handleRememberMeChange,
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'lib/app/public/assets/loginImage.png',
+                ),
+                fit: BoxFit.cover, 
               ),
-              LoginButton(onPressed: _login, isLoading: _isLoading),
-            ],
+            ),
           ),
-        ),
+          SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(40.w),
+              height: 1.sh,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(25.r),
+                    child: BackdropFilter(
+                      filter: ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(40.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(25.r),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            const LoginHeader(),
+                            SizedBox(height: 40.h),
+
+                            LoginFormFields(
+                              emailController: _emailController,
+                              passwordController: _passwordController,
+                              rememberMe: _rememberMe,
+                              onRememberMeChanged: _handleRememberMeChange,
+                            ),
+
+                            SizedBox(height: 30.h),
+                            LoginButton(
+                              onPressed: _login,
+                              isLoading: _isLoading,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -110,10 +110,10 @@ class CartPage extends ConsumerWidget {
   PreferredSizeWidget _buildAppBar(BuildContext context, Color primaryColor) {
     return AppBar(
       backgroundColor: AppColors.primary,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.white, size: 60.sp),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
+      //leading: IconButton(
+      //  icon: Icon(Icons.arrow_back, color: Colors.white, size: 60.sp),
+      //  onPressed: () => Navigator.of(context).pop(),
+      //),
       title: Text(
         "Sepetim",
         style: TextStyle(

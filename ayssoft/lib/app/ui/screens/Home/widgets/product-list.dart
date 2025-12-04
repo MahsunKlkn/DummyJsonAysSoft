@@ -1,9 +1,8 @@
-// ProductListWidget.dart
-
 import 'package:ayssoft/app/manager/provider/product.dart';
 import 'package:ayssoft/app/ui/screens/Home/widgets/product-card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProductListWidget extends ConsumerWidget { 
   const ProductListWidget({super.key});
@@ -11,33 +10,33 @@ class ProductListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(productNotifierProvider);
+
     if (productState.isLoading && productState.products.isEmpty) {
-      return const SliverToBoxAdapter( 
+      return SliverToBoxAdapter( 
         child: SizedBox(
-          height: 100,
-          child: Center(child: CircularProgressIndicator()),
+          height: 110.h,
+          child: const Center(child: CircularProgressIndicator()),
         ),
       );
     }
     if (productState.errorMessage != null && productState.products.isEmpty) {
       return SliverToBoxAdapter( 
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.w),
           child: Center(child: Text('Hata: ${productState.errorMessage}')),
         ),
       );
     }
     if (productState.products.isEmpty && !productState.isLoading) {
-      return const SliverToBoxAdapter( 
+      return SliverToBoxAdapter( 
         child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Center(child: Text('Ürün bulunamadı.')),
+          padding: EdgeInsets.all(16.w),
+          child: const Center(child: Text('Ürün bulunamadı.')),
         ),
       );
     }
-    
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -46,11 +45,11 @@ class ProductListWidget extends ConsumerWidget {
           },
           childCount: productState.products.length,
         ),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, 
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+          childAspectRatio: 0.75, 
+          crossAxisSpacing: 10.w, 
+          mainAxisSpacing: 10.h,  
         ),
       ),
     );

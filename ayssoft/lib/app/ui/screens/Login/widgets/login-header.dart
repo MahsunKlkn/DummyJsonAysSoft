@@ -21,8 +21,8 @@ class LoginHeader extends StatelessWidget {
         Text(
           'Hesabınıza giriş yapın',
           style: TextStyle(
-            fontSize: 40.sp,
-            color: AppColors.grey200,
+            fontSize: 45.sp,
+            color: AppColors.textPrimary,
           ),
         ),
         SizedBox(height: 100.h),

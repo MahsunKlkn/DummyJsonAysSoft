@@ -2,11 +2,12 @@ import 'package:ayssoft/app/core/storage/carts.dart';
 import 'package:ayssoft/app/manager/riverpod/cart.dart';
 import 'package:ayssoft/app/manager/state/cartState.dart';
 import 'package:ayssoft/app/repository/Base/cartBase.dart';
+import 'package:ayssoft/app/repository/cartRepository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 final cartRepositoryProvider = Provider<ICartBaseRepository>((ref) {
-  return HiveCartRepository();
+  return CartRepository(CartManager());
 });
 
 final cartNotifierProvider = StateNotifierProvider<CartNotifier, CartState>((ref) {
